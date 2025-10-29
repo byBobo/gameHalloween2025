@@ -1,0 +1,5 @@
+{
+  "name": "Static Hello World Page",
+  "description": "A simple and beautifully styled static 'Hello World' HTML page, perfect for publishing on GitHub Pages. It uses Tailwind CSS for a modern look.",
+  "requestFramePermissions": []
+}
