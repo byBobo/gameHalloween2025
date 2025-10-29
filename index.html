@@ -4,30 +4,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Frasi Dinamiche</title>
+    <title>Sussurri nel Buio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-light: #ffffff;
-            --bg-dark: #121212;
-            --text-light: #1f2937;
-            --text-dark: #f9fafb;
-            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            --bg-dark: #0d0d0d;
+            --bg-center: #2a2a2a;
+            --text-color: #f0e6d2; /* Un bianco "sporco", tipo osso */
+            --glow-color: #8b0000; /* Rosso scuro */
+            --font-creepy: 'Special Elite', monospace;
         }
 
         html, body {
             height: 100%;
             margin: 0;
             padding: 0;
-            font-family: var(--font-family);
+            font-family: var(--font-creepy);
+            overflow: hidden;
         }
 
         body {
-            background-color: var(--bg-light);
-            color: var(--text-light);
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(circle, var(--bg-center) 0%, var(--bg-dark) 70%);
+            color: var(--text-color);
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background-color 0.3s, color 0.3s;
         }
 
         main {
@@ -37,56 +41,78 @@
         }
 
         #phrase {
-            /* Imposta una dimensione del carattere reattiva con un minimo e un massimo */
-            font-size: clamp(1.75rem, 8vw, 4rem);
-            font-weight: 500;
-            line-height: 1.3;
+            font-size: clamp(2rem, 10vw, 6rem);
+            font-weight: normal;
+            line-height: 1.4;
             margin: 0;
+            opacity: 0; /* Inizia invisibile, verrà mostrato dall'animazione JS */
+            transition: opacity 0.5s ease-in;
+            white-space: pre-wrap; /* Mantiene gli spazi e va a capo correttamente */
+            animation: pulseGlow 5s infinite ease-in-out;
         }
 
-        /* Dark Mode */
-        @media (prefers-color-scheme: dark) {
-            body {
-                background-color: var(--bg-dark);
-                color: var(--text-dark);
+        @keyframes pulseGlow {
+            0%, 100% {
+                text-shadow: 0 0 7px rgba(240, 230, 210, 0.4), 0 0 10px var(--glow-color);
+            }
+            50% {
+                text-shadow: 0 0 10px rgba(240, 230, 210, 0.6), 0 0 18px var(--glow-color);
             }
         }
+
     </style>
 </head>
 <body>
 
     <main>
-        <p id="phrase">Caricamento...</p>
+        <p id="phrase"></p>
     </main>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const phrases = [
-                "Questa è la prima frase.", // id=1
-                "Ecco la seconda, un po' più lunga per vedere l'effetto.", // id=2
-                "Tre è il numero perfetto.", // id=3
-                "Quattro stagioni in un giorno.", // id=4
-                "Cinque minuti e sono pronto.", // id=5
-                "Sei la frase numero sei.", // id=6
-                "Sette meraviglie del mondo.", // id=7
-                "L'otto volante delle emozioni.", // id=8
-                "Nove vite come un gatto.", // id=9
-                "Dieci e lode per te che sei qui.", // id=10
-                "Undici giocatori in campo.", // id=11
-                "Dodici mesi in un anno.", // id=12
+                "Ti stavo aspettando.", // id=1
+                "Guarda dietro di te.", // id=2
+                "Non spegnere la luce.", // id=3
+                "Senti anche tu questo rumore?", // id=4
+                "Siamo soli qui... o forse no.", // id=5
+                "Il buio ha i suoi segreti.", // id=6
+                "Non fidarti delle ombre.", // id=7
+                "Qualcosa si muove nell'angolo.", // id=8
+                "Tic, toc... il tempo sta per scadere.", // id=9
+                "Chiudi la porta a chiave.", // id=10
+                "Ho sentito un urlo.", // id=11
+                "Benvenuto nel tuo incubo.", // id=12
             ];
 
             const phraseElement = document.getElementById('phrase');
             const urlParams = new URLSearchParams(window.location.search);
             const id = parseInt(urlParams.get('id'), 10);
 
+            let selectedPhrase;
             if (id > 0 && id <= phrases.length) {
-                // L'ID è valido, mostra la frase corrispondente (array è 0-indexed)
-                phraseElement.textContent = phrases[id - 1];
+                selectedPhrase = phrases[id - 1];
             } else {
-                // L'ID non è valido o non è presente
-                phraseElement.textContent = "Benvenuto! Prova ad aggiungere ?id=1 (fino a 12) all'URL.";
+                const randomIndex = Math.floor(Math.random() * phrases.length);
+                selectedPhrase = phrases[randomIndex];
             }
+
+            function typewriterEffect(element, text, speed = 50) {
+                element.textContent = ''; 
+                element.style.opacity = 1; 
+                let i = 0;
+                function type() {
+                    if (i < text.length) {
+                        element.textContent += text.charAt(i);
+                        i++;
+                        setTimeout(type, speed);
+                    }
+                }
+                // Aggiunge un piccolo ritardo iniziale per aumentare la suspense
+                setTimeout(type, 800);
+            }
+
+            typewriterEffect(phraseElement, selectedPhrase);
         });
     </script>
 
